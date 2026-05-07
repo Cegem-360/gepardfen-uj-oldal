@@ -6,7 +6,7 @@ const App = () => {
     "accent": "#f5a524",
     "theme": "light",
     "density": "comfortable",
-    "tier": "gold",
+    "tier": "guest",
     "heroVariant": "split",
     "lang": "hu"
   }/*EDITMODE-END*/;
@@ -83,6 +83,8 @@ const App = () => {
           onQuickOrder={() => setQuickOpen(true)}
           onAdd={addToCart}
           onView={goProduct}
+          onLoginClick={() => setLoginOpen(true)}
+          onBrandSelect={(tagId) => goCategory("brand:" + tagId)}
           favs={favs}
           onFav={toggleFav}
         />
@@ -234,28 +236,34 @@ const App = () => {
 };
 
 // Home page composition
-const HomePage = ({ partner, tweaks, onCategorySelect, onQuickOrder, onAdd, onView, favs, onFav }) => {
-  const featured = window.GF_PRODUCTS.filter(p => p.badge === "Bestseller" || p.badge === "Akció").slice(0, 4);
+const HomePage = ({ partner, tweaks, onCategorySelect, onQuickOrder, onAdd, onView, onLoginClick, onBrandSelect, favs, onFav }) => {
+  const isLoggedIn = partner.tier !== "guest";
+  const featured = window.GF_PRODUCTS.filter(p => p.badge === "Bestseller" || p.badge === "Akci\u00f3").slice(0, 4);
   const newArrivals = window.GF_PRODUCTS.slice(4, 8);
 
   return (
     <main>
-      <Hero tweaks={tweaks} partner={partner} onCategorySelect={onCategorySelect} onQuickOrder={onQuickOrder}/>
+      <Hero tweaks={tweaks} partner={partner} onCategorySelect={onCategorySelect} onQuickOrder={onQuickOrder} onLoginClick={onLoginClick}/>
+      {!isLoggedIn && <GuestCallout onLoginClick={onLoginClick}/>}
       <BrandsStrip/>
       <CategoryGrid onSelect={onCategorySelect}/>
+      <PromoBannerLarge onCategorySelect={onCategorySelect}/>
       <FeaturedRow
-        title="Kiemelt termékek és aktuális akciók"
-        subtitle="Heti ajánlatok"
+        title="Kiemelt term\u00e9kek \u00e9s aktu\u00e1lis akci\u00f3k"
+        subtitle="Heti aj\u00e1nlatok"
         products={featured} partner={partner}
-        onAdd={onAdd} onView={onView}
+        onAdd={onAdd} onView={onView} isLoggedIn={isLoggedIn}
       />
+      <BrandFilterSection onBrandSelect={onBrandSelect}/>
+      <PromoDuo onCategorySelect={onCategorySelect}/>
       <ValueProps/>
       <FeaturedRow
-        title="Új beszerzések"
-        subtitle="Friss raktár"
+        title="\u00daj beszerz\u00e9sek"
+        subtitle="Friss rakt\u00e1r"
         products={newArrivals} partner={partner}
-        onAdd={onAdd} onView={onView}
+        onAdd={onAdd} onView={onView} isLoggedIn={isLoggedIn}
       />
+      <PromoBannerWide onCategorySelect={onCategorySelect}/>
       <CTABanner onQuickOrder={onQuickOrder}/>
     </main>
   );

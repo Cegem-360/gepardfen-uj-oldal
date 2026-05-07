@@ -23,11 +23,20 @@ const Header = ({ tweaks, setTweak, partner, cart, onSearch, query, onCartOpen, 
   return (
     <header className="gf-header">
       <div className="gf-header__inner">
-        <div className="gf-logo" onClick={onLogoClick}>
-          <div className="gf-logo__mark">G·F</div>
-          <div className="gf-logo__text">
-            <div className="gf-logo__name">Gepárd-FEN</div>
-            <div className="gf-logo__sub">B2B alkatrész portál</div>
+        <div className="gf-logo" onClick={onLogoClick} style={{display: "flex", alignItems: "center", gap: 14}}>
+          <img src="assets/gepard-logo.gif" alt="Gepárd-FEN" style={{
+            height: 44, width: "auto", display: "block",
+            mixBlendMode: "multiply",
+          }}/>
+          <div style={{
+            display: "flex", flexDirection: "column", lineHeight: 1.1,
+            paddingLeft: 14, borderLeft: "1px solid var(--gf-line)",
+          }}>
+            <div style={{
+              fontSize: 11, fontWeight: 600, letterSpacing: "0.06em",
+              textTransform: "uppercase", color: "var(--gf-muted)",
+            }}>B2B alkatrész portál</div>
+            <div style={{fontSize: 13, fontWeight: 600, color: "var(--gf-ink)", marginTop: 4}}>gepardfen.hu</div>
           </div>
         </div>
 

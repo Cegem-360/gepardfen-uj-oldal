@@ -1,8 +1,13 @@
-// Gepárd-FEN B2B webshop — Hero + Featured sections (homepage)
+// Gepárd-FEN B2B webshop — Hero + banner-szakaszok + márkaszűrő + kategóriák
 
-const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder }) => {
+const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder, onLoginClick }) => {
   const isLoggedIn = partner.tier !== "guest";
   const variant = tweaks.heroVariant || "split";
+
+  // Vendég nézet — eltérő, üzenete fókuszáltabb
+  if (!isLoggedIn) {
+    return <GuestHero onCategorySelect={onCategorySelect} onLoginClick={onLoginClick} onQuickOrder={onQuickOrder}/>;
+  }
 
   if (variant === "split") {
     return (
@@ -14,7 +19,6 @@ const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder }) => {
           display: "grid", gridTemplateColumns: "1.2fr 1fr",
           minHeight: 460, gap: 0,
         }}>
-          {/* Bal: szöveg */}
           <div style={{padding: "56px 48px 56px 0", display: "flex", flexDirection: "column", justifyContent: "center"}}>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 8,
@@ -35,10 +39,8 @@ const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder }) => {
               lineHeight: 1.02, margin: 0,
               textWrap: "balance",
             }}>
-              {isLoggedIn ? "Üdv újra," : "Alkatrészek"}<br/>
-              <span style={{color: "var(--gf-accent)"}}>
-                {isLoggedIn ? partner.company.split(" ")[0] + "!" : "haszon­gépjárműhöz."}
-              </span>
+              Üdv újra,<br/>
+              <span style={{color: "var(--gf-accent)"}}>{partner.company.split(" ")[0]}!</span>
             </h1>
             <p style={{
               fontSize: 17, lineHeight: 1.55, color: "var(--gf-ink-2)",
@@ -54,7 +56,6 @@ const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder }) => {
                 <GFIcon name="bolt" size={16}/> Gyorsrendelés cikkszámmal
               </button>
             </div>
-            {/* trust strip */}
             <div style={{
               display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
               gap: 24, marginTop: 48, paddingTop: 24,
@@ -75,63 +76,24 @@ const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder }) => {
             </div>
           </div>
 
-          {/* Jobb: vizuális blokk */}
+          {/* Jobb: banner kép */}
           <div style={{
-            background: "var(--gf-ink)",
-            position: "relative",
-            color: "var(--gf-bg)",
-            display: "flex", alignItems: "stretch", justifyContent: "stretch",
-            overflow: "hidden",
+            position: "relative", overflow: "hidden",
+            backgroundImage: "url(assets/banner-bg.jpg)",
+            backgroundSize: "cover", backgroundPosition: "center",
           }}>
-            {/* Grid háttér */}
-            <svg viewBox="0 0 400 460" preserveAspectRatio="xMidYMid slice" style={{
-              position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.4,
-            }}>
-              <defs>
-                <pattern id="hgrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M20 0H0V20" stroke="rgba(245,165,36,0.08)" strokeWidth="0.5" fill="none"/>
-                </pattern>
-              </defs>
-              <rect width="400" height="460" fill="url(#hgrid)"/>
-            </svg>
-            {/* Nagy kategória ikon */}
             <div style={{
-              position: "absolute", top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              color: "var(--gf-accent)",
-            }}>
-              <svg width="320" height="220" viewBox="0 0 320 220" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <ellipse cx="120" cy="110" rx="90" ry="84" strokeOpacity="0.9"/>
-                <circle cx="120" cy="110" r="32" strokeOpacity="0.95"/>
-                <circle cx="120" cy="110" r="12" fill="currentColor"/>
-                <path d="M210 110h60M210 80l55-22M210 140l55 22" strokeOpacity="0.7"/>
-                <path d="M120 26v-12M120 206v-12M30 110H18M222 110h-12" strokeOpacity="0.5"/>
-              </svg>
-            </div>
-            {/* Fent: cikkszám-szerű címkék */}
+              position: "absolute", inset: 0,
+              background: "linear-gradient(135deg, rgba(15,17,20,0.55) 0%, rgba(15,17,20,0.15) 60%)",
+            }}/>
             <div style={{
-              position: "absolute", top: 24, left: 24,
-              fontFamily: "var(--gf-mono)", fontSize: 11,
-              opacity: 0.5, lineHeight: 1.6,
+              position: "absolute", left: 24, bottom: 24, right: 24,
+              color: "#fff",
             }}>
-              <div>WESEM RE.22500 / 12V LED</div>
-              <div>WESEM HM3.07000 / 24V H4</div>
-              <div>POLMO VF-D50 / 40t</div>
-              <div>RYWAL LB-180 / 16200lm</div>
+              <div style={{fontFamily: "var(--gf-mono)", fontSize: 10, opacity: 0.8, letterSpacing: "0.1em"}}>SPOTLIGHT · WESEM HIVATALOS</div>
+              <div style={{fontSize: 22, fontWeight: 700, marginTop: 6, textShadow: "0 2px 12px rgba(0,0,0,0.4)"}}>RE.22500 sorozat</div>
+              <div style={{fontSize: 13, opacity: 0.85, marginTop: 2}}>Robusztus LED munkalámpa család · IP67 · 12/24V</div>
             </div>
-            {/* Lent: címke */}
-            <div style={{
-              position: "absolute", bottom: 24, left: 24, right: 24,
-              display: "flex", justifyContent: "space-between", alignItems: "flex-end",
-            }}>
-              <div>
-                <div style={{fontFamily: "var(--gf-mono)", fontSize: 10, opacity: 0.5, letterSpacing: "0.1em"}}>SPOTLIGHT · ÚJDONSÁG</div>
-                <div style={{fontSize: 22, fontWeight: 700, marginTop: 6}}>WESEM RE.22500 sorozat</div>
-                <div style={{fontSize: 13, opacity: 0.7, marginTop: 2}}>Robusztus LED munkalámpa család · IP67 · 12/24V</div>
-              </div>
-              <button className="gf-btn gf-btn--primary gf-btn--sm">Megnézem</button>
-            </div>
-            {/* Sárga sarok-akcent */}
             <div style={{position: "absolute", top: 0, right: 0, width: 60, height: 60, background: "var(--gf-accent)"}}/>
           </div>
         </div>
@@ -139,7 +101,6 @@ const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder }) => {
     );
   }
 
-  // Egyszerűbb variáns
   return (
     <section style={{background: "var(--gf-ink)", color: "var(--gf-bg)", padding: "72px 0"}}>
       <div className="gf-container">
@@ -148,6 +109,287 @@ const Hero = ({ tweaks, partner, onCategorySelect, onQuickOrder }) => {
     </section>
   );
 };
+
+// Vendég hero — más üzenet, hangsúlyban a regisztráció / belépés
+const GuestHero = ({ onCategorySelect, onLoginClick, onQuickOrder }) => (
+  <section className="gf-anim-in" style={{
+    position: "relative", overflow: "hidden",
+    minHeight: 520,
+    backgroundImage: "url(assets/banner-bg.jpg)",
+    backgroundSize: "cover", backgroundPosition: "center",
+    color: "#fff",
+    borderBottom: "1px solid var(--gf-line)",
+  }}>
+    <div style={{
+      position: "absolute", inset: 0,
+      background: "linear-gradient(95deg, rgba(10,12,14,0.88) 0%, rgba(10,12,14,0.55) 55%, rgba(10,12,14,0.2) 100%)",
+    }}/>
+    <div className="gf-container" style={{position: "relative", padding: "72px 24px 64px"}}>
+      <div style={{maxWidth: 720}}>
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 8,
+          padding: "6px 12px",
+          background: "rgba(255,255,255,0.1)",
+          backdropFilter: "blur(8px)",
+          borderRadius: 100,
+          fontSize: 12, fontWeight: 600,
+          marginBottom: 24,
+          border: "1px solid rgba(255,255,255,0.18)",
+        }}>
+          <span style={{width:6, height:6, borderRadius:"50%", background:"var(--gf-accent)"}}/>
+          B2B alkatrész portál — viszonteladók részére
+        </div>
+        <h1 style={{
+          fontSize: "clamp(42px, 6vw, 68px)",
+          fontWeight: 800, letterSpacing: "-0.025em",
+          lineHeight: 1.0, margin: 0,
+          textShadow: "0 4px 32px rgba(0,0,0,0.5)",
+        }}>
+          Alkatrészek<br/>
+          <span style={{color: "var(--gf-accent)"}}>haszongépjárműhöz.</span>
+        </h1>
+        <p style={{
+          fontSize: 17, lineHeight: 1.55,
+          color: "rgba(255,255,255,0.9)",
+          maxWidth: 540, marginTop: 22, textWrap: "pretty",
+        }}>
+          A Gepárd-FEN Kft. 1992 óta importál és forgalmaz haszongépjármű-alkatrészeket. WESEM hivatalos magyarországi képviselete, 40+ európai gyártó portfóliójával.
+        </p>
+        <div style={{display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap"}}>
+          <button className="gf-btn gf-btn--primary gf-btn--lg" onClick={onLoginClick}>
+            <GFIcon name="user" size={16}/> Bejelentkezés / Regisztráció
+          </button>
+          <button className="gf-btn gf-btn--lg" onClick={() => onCategorySelect("fenyszorok")} style={{
+            background: "rgba(255,255,255,0.08)",
+            color: "#fff",
+            borderColor: "rgba(255,255,255,0.25)",
+            backdropFilter: "blur(8px)",
+          }}>
+            Termékek böngészése <GFIcon name="chev-r" size={16}/>
+          </button>
+        </div>
+        <div style={{
+          display: "flex", gap: 32, marginTop: 48, flexWrap: "wrap",
+          fontSize: 13, color: "rgba(255,255,255,0.85)",
+        }}>
+          <div style={{display: "flex", gap: 10, alignItems: "center"}}>
+            <GFIcon name="shield" size={18} style={{color: "var(--gf-accent)"}}/>
+            Eredeti gyártói garancia
+          </div>
+          <div style={{display: "flex", gap: 10, alignItems: "center"}}>
+            <GFIcon name="truck-fast" size={18} style={{color: "var(--gf-accent)"}}/>
+            Másnap kiszállítás
+          </div>
+          <div style={{display: "flex", gap: 10, alignItems: "center"}}>
+            <GFIcon name="warehouse" size={18} style={{color: "var(--gf-accent)"}}/>
+            Hazai raktárkészlet
+          </div>
+        </div>
+      </div>
+    </div>
+    {/* sárga sarok */}
+    <div style={{position: "absolute", top: 0, right: 0, width: 80, height: 80, background: "var(--gf-accent)"}}/>
+    <div style={{position: "absolute", top: 80, right: 0, width: 24, height: 24, background: "var(--gf-accent)"}}/>
+  </section>
+);
+
+// Vendég jelzősáv: árak rejtve
+const GuestCallout = ({ onLoginClick }) => (
+  <section style={{padding: "20px 0", background: "var(--gf-ink)", color: "var(--gf-bg)"}}>
+    <div className="gf-container" style={{
+      display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap",
+    }}>
+      <div style={{
+        width: 36, height: 36, background: "var(--gf-accent)", color: "var(--gf-ink)",
+        borderRadius: 8, display: "grid", placeItems: "center", flexShrink: 0,
+      }}>
+        <GFIcon name="info" size={20}/>
+      </div>
+      <div style={{flex: 1, minWidth: 280}}>
+        <div style={{fontWeight: 700, fontSize: 14}}>B2B partneráraink kizárólag bejelentkezett viszonteladóknak láthatók.</div>
+        <div style={{fontSize: 13, opacity: 0.75, marginTop: 2}}>Adószámmal regisztráljon — partnerszintje és kedvezménye 1 munkanapon belül aktiválódik.</div>
+      </div>
+      <button className="gf-btn gf-btn--primary gf-btn--sm" onClick={onLoginClick}>
+        Bejelentkezés <GFIcon name="chev-r" size={14}/>
+      </button>
+    </div>
+  </section>
+);
+
+// Beszállítók márkaszűrő szakasz — logókkal, mint az eredeti oldalon
+const BrandFilterSection = ({ onBrandSelect }) => (
+  <section style={{padding: "56px 0", background: "var(--gf-bg)"}}>
+    <div className="gf-container">
+      <div style={{
+        display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+        marginBottom: 24, flexWrap: "wrap", gap: 16,
+      }}>
+        <div>
+          <div className="gf-uppercase" style={{color: "var(--gf-accent)", marginBottom: 6}}>Beszállítók / márkák</div>
+          <h2 style={{fontSize: 32, fontWeight: 700, margin: 0, letterSpacing: "-0.02em"}}>Szűrés gyártó szerint</h2>
+          <p style={{fontSize: 14, color: "var(--gf-muted)", marginTop: 8, maxWidth: 560}}>
+            Kattintson a logóra a gyártó teljes katalógusához. Hivatalos partneri kapcsolatban állunk minden listázott márkával.
+          </p>
+        </div>
+        <a className="gf-btn gf-btn--ghost" style={{color: "var(--gf-muted)"}}>
+          Összes beszállító <GFIcon name="chev-r" size={14}/>
+        </a>
+      </div>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(6, 1fr)",
+        gap: 12,
+      }}>
+        {window.GF_BRANDS.map((b) => (
+          <button
+            key={b.tagId}
+            onClick={() => onBrandSelect?.(b.tagId)}
+            style={{
+              border: "1px solid var(--gf-line)",
+              background: "var(--gf-surface)",
+              padding: 16,
+              borderRadius: "var(--gf-radius-lg)",
+              cursor: "pointer", fontFamily: "inherit",
+              display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center", gap: 10,
+              minHeight: 108,
+              transition: "border-color .15s, transform .15s",
+              position: "relative",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--gf-ink)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--gf-line)"; e.currentTarget.style.transform = "none"; }}
+            title={`${b.name} — ${b.role}`}
+          >
+            <img
+              src={b.logo}
+              alt={b.name}
+              style={{
+                maxWidth: "100%", maxHeight: 48,
+                objectFit: "contain",
+                mixBlendMode: "multiply",
+              }}
+            />
+            <div style={{
+              fontSize: 10, color: "var(--gf-muted)",
+              fontFamily: "var(--gf-mono)", letterSpacing: "0.06em",
+            }}>{b.country}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// Nagy promo banner — Fristom FT-230/FT-320
+const PromoBannerLarge = ({ onCategorySelect }) => (
+  <section style={{padding: "32px 0"}}>
+    <div className="gf-container">
+      <div
+        onClick={() => onCategorySelect?.("prizmak")}
+        style={{
+          position: "relative", overflow: "hidden", cursor: "pointer",
+          borderRadius: "var(--gf-radius-lg)",
+          aspectRatio: "1920 / 720",
+          backgroundImage: "url(assets/banner-fristom-ft.jpg)",
+          backgroundSize: "cover", backgroundPosition: "center",
+          border: "1px solid var(--gf-line)",
+        }}
+      >
+        <div style={{
+          position: "absolute", top: 24, right: 24,
+          background: "var(--gf-accent)", color: "var(--gf-ink)",
+          padding: "8px 14px", fontWeight: 700, fontSize: 12,
+          letterSpacing: "0.06em", textTransform: "uppercase",
+        }}>Új termék · Fristom</div>
+      </div>
+    </div>
+  </section>
+);
+
+// Két oszlopos banner: bal = WESEM Spotlight, jobb = Steelpress
+const PromoDuo = ({ onCategorySelect }) => (
+  <section style={{padding: "16px 0 48px"}}>
+    <div className="gf-container">
+      <div style={{
+        display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16,
+      }}>
+        <div
+          onClick={() => onCategorySelect?.("fenyszorok")}
+          style={{
+            position: "relative", overflow: "hidden", cursor: "pointer",
+            borderRadius: "var(--gf-radius-lg)", border: "1px solid var(--gf-line)",
+            aspectRatio: "16 / 9",
+            backgroundImage: "url(assets/banner-homen.jpg)",
+            backgroundSize: "cover", backgroundPosition: "center",
+          }}
+        >
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.65) 100%)",
+          }}/>
+          <div style={{position: "absolute", left: 24, bottom: 24, color: "#fff"}}>
+            <div style={{fontFamily: "var(--gf-mono)", fontSize: 11, opacity: 0.8, letterSpacing: "0.1em"}}>WESEM SPOTLIGHT</div>
+            <div style={{fontSize: 26, fontWeight: 800, marginTop: 6, lineHeight: 1.1}}>Off-road LED fényhidak<br/>és pótlámpák</div>
+            <button className="gf-btn gf-btn--primary gf-btn--sm" style={{marginTop: 14}}>Megnézem <GFIcon name="chev-r" size={14}/></button>
+          </div>
+        </div>
+        <div
+          onClick={() => onCategorySelect?.("vonofejek")}
+          style={{
+            position: "relative", overflow: "hidden", cursor: "pointer",
+            borderRadius: "var(--gf-radius-lg)", border: "1px solid var(--gf-line)",
+            aspectRatio: "16 / 9",
+            background: "linear-gradient(135deg, #1a2942 0%, #0f1a2c 100%)",
+          }}
+        >
+          <img src="assets/banner-marker.jpg" alt="" style={{
+            position: "absolute", inset: 0, width: "100%", height: "100%",
+            objectFit: "cover", opacity: 0.6,
+            mixBlendMode: "luminosity",
+          }}/>
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(180deg, rgba(20,40,80,0.2) 0%, rgba(15,26,44,0.85) 100%)",
+          }}/>
+          <div style={{position: "absolute", left: 24, bottom: 24, color: "#fff"}}>
+            <div style={{fontFamily: "var(--gf-mono)", fontSize: 11, opacity: 0.8, letterSpacing: "0.1em"}}>STEELPRESS · ÚJ TÉTEL</div>
+            <div style={{fontSize: 26, fontWeight: 800, marginTop: 6, lineHeight: 1.1}}>Vonófejek &<br/>pótkocsi-mechanika</div>
+            <button className="gf-btn gf-btn--primary gf-btn--sm" style={{marginTop: 14}}>Katalógus <GFIcon name="chev-r" size={14}/></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+// Hosszú banner: prizmak + helyzetjelzők (testing.jpg)
+const PromoBannerWide = ({ onCategorySelect }) => (
+  <section style={{padding: "16px 0"}}>
+    <div className="gf-container">
+      <div
+        onClick={() => onCategorySelect?.("prizmak")}
+        style={{
+          position: "relative", overflow: "hidden", cursor: "pointer",
+          borderRadius: "var(--gf-radius-lg)", border: "1px solid var(--gf-line)",
+          aspectRatio: "1920 / 540",
+          backgroundImage: "url(assets/banner-truck-tail.jpg)",
+          backgroundSize: "cover", backgroundPosition: "center",
+        }}
+      >
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%)",
+        }}/>
+        <div style={{position: "absolute", left: 32, top: "50%", transform: "translateY(-50%)", color: "#fff", maxWidth: 480}}>
+          <div style={{fontFamily: "var(--gf-mono)", fontSize: 11, opacity: 0.85, letterSpacing: "0.12em"}}>HASZONGÉPJÁRMŰ-VILÁGÍTÁS</div>
+          <div style={{fontSize: 32, fontWeight: 800, marginTop: 8, lineHeight: 1.05}}>Hátsó lámpák, prizmák, helyzetjelzők — egy helyen.</div>
+          <button className="gf-btn gf-btn--primary gf-btn--sm" style={{marginTop: 16}}>Tovább a kategóriához <GFIcon name="chev-r" size={14}/></button>
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
 const CategoryGrid = ({ onSelect }) => (
   <section style={{padding: "48px 0", background: "var(--gf-bg)"}}>
@@ -175,8 +417,7 @@ const CategoryGrid = ({ onSelect }) => (
               background: "var(--gf-surface)",
               padding: "20px 18px",
               borderRadius: "var(--gf-radius-lg)",
-              textAlign: "left",
-              cursor: "pointer",
+              textAlign: "left", cursor: "pointer",
               display: "flex", alignItems: "center", gap: 14,
               fontFamily: "inherit", color: "var(--gf-ink)",
               transition: "border-color .15s, transform .15s, background .15s",
@@ -214,7 +455,7 @@ const CategoryGrid = ({ onSelect }) => (
   </section>
 );
 
-const FeaturedRow = ({ products, partner, onAdd, onView, title, subtitle }) => (
+const FeaturedRow = ({ products, partner, onAdd, onView, title, subtitle, isLoggedIn }) => (
   <section style={{padding: "32px 0", background: "var(--gf-bg)"}}>
     <div className="gf-container">
       <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 20}}>
@@ -227,19 +468,19 @@ const FeaturedRow = ({ products, partner, onAdd, onView, title, subtitle }) => (
         display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16,
       }}>
         {products.slice(0, 4).map(p => (
-          <ProductCard key={p.sku} product={p} partner={partner} onAdd={onAdd} onView={onView}/>
+          <ProductCard key={p.sku} product={p} partner={partner} onAdd={onAdd} onView={onView} isLoggedIn={isLoggedIn}/>
         ))}
       </div>
     </div>
   </section>
 );
 
-const ProductCard = ({ product: p, partner, onAdd, onView, fav, onFav }) => {
+const ProductCard = ({ product: p, partner, onAdd, onView, fav, onFav, isLoggedIn }) => {
   const price = calcPrice(p, partner.tier, 1);
   const hasDisc = price.unitDisc > 0;
   return (
     <article className="gf-pcard" onClick={() => onView(p)}>
-      <div className="gf-pcard__media">
+      <div className="gf-pcard__media" style={{position: "relative", aspectRatio: "1 / 1", background: "#fff", overflow: "hidden"}}>
         <div className="gf-pcard__badges">
           {p.badge && <span className={`gf-tag ${p.badge === "Akció" ? "gf-tag--accent" : ""}`}>{p.badge}</span>}
           {p.stock === 0 && <span className="gf-tag gf-tag--danger">Előrendelhető</span>}
@@ -250,34 +491,69 @@ const ProductCard = ({ product: p, partner, onAdd, onView, fav, onFav }) => {
         >
           <GFIcon name="heart" size={16}/>
         </div>
-        <GFProductGlyph cat={p.cat} sku={p.sku}/>
+        {p.image ? (
+          <img src={p.image} alt={p.name} style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%", objectFit: "contain",
+            padding: 16,
+          }}/>
+        ) : (
+          <GFProductGlyph cat={p.cat} sku={p.sku}/>
+        )}
       </div>
       <div className="gf-pcard__body">
         <div className="gf-pcard__brand">{p.brand} · {p.sub}</div>
         <div className="gf-pcard__name">{p.name}</div>
-        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-          <span className="gf-pcard__sku">{p.sku}</span>
+        <div style={{display: "flex", gap: 8, fontSize: 11, color: "var(--gf-muted)", flexWrap: "wrap"}}>
+          <span className="gf-mono">Gyári: {p.factoryCode}</span>
+          <span className="gf-mono">Áru: {p.sku}</span>
+        </div>
+        <div style={{display: "flex", justifyContent: "flex-end"}}>
           <StockBadge stock={p.stock} eta={p.eta}/>
         </div>
         <div className="gf-pcard__price-row">
-          <div style={{flex: 1}}>
-            {hasDisc && <div className="gf-pcard__price-list">{fmtHUF(p.listPrice)}</div>}
-            <div className="gf-pcard__price-net">{fmtHUF(price.unit)}</div>
-            <div className="gf-pcard__price-unit">/ {p.unit} · ÁFA nélkül</div>
-          </div>
-          {hasDisc && (
-            <span className="gf-tag gf-tag--success">−{Math.round(price.unitDisc * 100)}%</span>
+          {isLoggedIn ? (
+            <React.Fragment>
+              <div style={{flex: 1}}>
+                {hasDisc && <div className="gf-pcard__price-list">{fmtHUF(p.listPrice)}</div>}
+                <div className="gf-pcard__price-net">{fmtHUF(price.unit)}</div>
+                <div className="gf-pcard__price-unit">/ {p.unit} · ÁFA nélkül</div>
+              </div>
+              {hasDisc && (
+                <span className="gf-tag gf-tag--success">−{Math.round(price.unitDisc * 100)}%</span>
+              )}
+            </React.Fragment>
+          ) : (
+            <div style={{
+              flex: 1, padding: "8px 10px", borderRadius: 6,
+              background: "var(--gf-surface-2)", color: "var(--gf-ink-2)",
+              fontSize: 12, lineHeight: 1.35,
+              display: "flex", alignItems: "center", gap: 8,
+            }}>
+              <GFIcon name="user" size={14}/>
+              <span>Ár csak <strong>bejelentkezés</strong> után</span>
+            </div>
           )}
         </div>
       </div>
       <div className="gf-pcard__actions">
-        <button
-          className="gf-btn gf-btn--primary gf-btn--sm"
-          disabled={p.stock === 0}
-          onClick={(e) => { e.stopPropagation(); onAdd(p, p.moq); }}
-        >
-          <GFIcon name="cart" size={14}/> Kosárba ({p.moq})
-        </button>
+        {isLoggedIn ? (
+          <button
+            className="gf-btn gf-btn--primary gf-btn--sm"
+            disabled={p.stock === 0}
+            onClick={(e) => { e.stopPropagation(); onAdd(p, p.moq); }}
+          >
+            <GFIcon name="cart" size={14}/> Kosárba ({p.moq})
+          </button>
+        ) : (
+          <button
+            className="gf-btn gf-btn--sm"
+            onClick={(e) => { e.stopPropagation(); onView(p); }}
+            style={{justifyContent: "center"}}
+          >
+            Részletek
+          </button>
+        )}
         <button
           className="gf-btn gf-btn--sm"
           onClick={(e) => { e.stopPropagation(); onView(p); }}
@@ -291,32 +567,26 @@ const ProductCard = ({ product: p, partner, onAdd, onView, fav, onFav }) => {
 };
 
 const BrandsStrip = () => (
-  <section style={{padding: "32px 0", background: "var(--gf-surface)", borderTop: "1px solid var(--gf-line)", borderBottom: "1px solid var(--gf-line)"}}>
+  <section style={{padding: "24px 0", background: "var(--gf-surface)", borderTop: "1px solid var(--gf-line)", borderBottom: "1px solid var(--gf-line)"}}>
     <div className="gf-container">
-      <div style={{display: "flex", alignItems: "center", gap: 32, justifyContent: "space-between"}}>
-        <div style={{flexShrink: 0}}>
+      <div style={{display: "flex", alignItems: "center", gap: 32}}>
+        <div style={{flexShrink: 0, minWidth: 220}}>
           <div className="gf-uppercase" style={{color: "var(--gf-muted)", marginBottom: 4}}>Hivatalosan képviselt gyártók</div>
-          <div style={{fontSize: 16, fontWeight: 600, color: "var(--gf-ink)"}}>40+ partner a piacvezető márkák közül</div>
+          <div style={{fontSize: 14, fontWeight: 600, color: "var(--gf-ink)"}}>40+ partner a piacvezető márkák közül</div>
         </div>
         <div style={{
-          display: "flex", gap: 4, flexWrap: "wrap", flex: 1, justifyContent: "flex-end",
+          display: "flex", gap: 28, flex: 1, justifyContent: "space-around",
+          alignItems: "center", flexWrap: "wrap",
         }}>
-          {window.GF_BRANDS.slice(0, 9).map((b) => (
-            <div key={b.name} style={{
-              border: "1px solid var(--gf-line)",
-              padding: "10px 16px", borderRadius: 4,
-              fontWeight: 700, letterSpacing: "0.02em",
-              fontSize: 14, color: "var(--gf-ink-2)",
-              display: "flex", alignItems: "center", gap: 8,
-              background: "var(--gf-bg)",
-            }}>
-              {b.name}
-              <span style={{
-                fontSize: 9, opacity: 0.6, fontFamily: "var(--gf-mono)",
-                padding: "2px 4px", border: "1px solid currentColor",
-                borderRadius: 2,
-              }}>{b.country}</span>
-            </div>
+          {window.GF_BRANDS.slice(0, 8).map((b) => (
+            <img key={b.tagId} src={b.logo} alt={b.name} title={b.name} style={{
+              maxHeight: 32, maxWidth: 100, objectFit: "contain",
+              opacity: 0.8, mixBlendMode: "multiply",
+              transition: "opacity .15s",
+            }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = 0.8}
+            />
           ))}
         </div>
       </div>
@@ -354,4 +624,8 @@ const ValueProps = () => (
   </section>
 );
 
-Object.assign(window, { Hero, CategoryGrid, FeaturedRow, ProductCard, BrandsStrip, ValueProps });
+Object.assign(window, {
+  Hero, GuestHero, GuestCallout,
+  BrandFilterSection, PromoBannerLarge, PromoDuo, PromoBannerWide,
+  CategoryGrid, FeaturedRow, ProductCard, BrandsStrip, ValueProps,
+});
